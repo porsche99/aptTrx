@@ -15,6 +15,7 @@ insertAptTrx.py 를 통해 dynamodb에 넣어둔 아파트 매매가에 대한 �
 
 from __future__ import print_function # Python 2/3 compatibility
 import boto3
+import sqlite3
 import json
 import decimal
 from boto3.dynamodb.conditions import Key, Attr
@@ -39,7 +40,7 @@ class DecimalEncoder(json.JSONEncoder):
         return super(DecimalEncoder, self).default(o)
 
 #입력받은 아파트 주소로 지번주소 및 주소상세를 조회한다
-inputKeyword = '래미안 이문2차  101동 101호'  # 아파트 주소(입력받아야함.)
+inputKeyword = '남산타운 31동 1701호'  # 아파트 주소(입력받아야함.)
 
 def getDetailAddr(keyword):
     addrDetailUrl = 'http://www.juso.go.kr/addrlink/addrLinkApi.do?'
@@ -97,9 +98,11 @@ def getDetailBuildingInfo(sigunguCd, bjdongCd, bun, ji, dongNmP, hoNmP):
         #parsed = item.split('||')
         #print(parsed)
         #print(parsed[8])
-        mainPurpsCdNm = item.mainPurpsCdNm.string
-        #print(mainPurpsCdNm)
-        if '아파트' in mainPurpsCdNm:
+        #mainPurpsCdNm = item.mainPurpsCdNm.string
+        exposPubuseGbCd = item.exposPubuseGbCd.string
+        print(exposPubuseGbCd)
+        #if '아파트' in mainPurpsCdNm:
+        if '1' in exposPubuseGbCd:
             #print(re.sub('츨','',item.flrNoNm.string))		
             retDetailBuildingInfo = item.area.string, re.sub('층','',item.flrNoNm.string)
             #print(ret)
@@ -115,8 +118,8 @@ bjdongCdIn = detailAddr[1]  # 법정동읍면동코드
 bunIn = detailAddr[2].zfill(4)  # 법정동본번코드(4자리로 '0' padding 필요)
 jiIn = detailAddr[3].zfill(4)  # 법정동부번코드(4자리로 '0' padding 필요)
 
-dongNmPIn = '101동'
-hoNmPIn = '101호'
+dongNmPIn ='31동'
+hoNmPIn = '1701호'
 
 detailBuildingInfo = getDetailBuildingInfo(sigunguCdIn, bjdongCdIn, bunIn, jiIn, dongNmPIn, hoNmPIn)
 print(detailBuildingInfo)
@@ -136,13 +139,14 @@ print(detailBuildingInfo)
 
 area = detailBuildingInfo[0]
 flr = detailBuildingInfo[1]
-keyCode = sigunguCdIn+bjdongCdIn+bunIn+jiIn
-#keyCodeB = sigunguCdIn+bjdongCdIn+bunIn+jiIn+"|"+area+"|"+flr
+#keyCode = sigunguCdIn+bjdongCdIn+bunIn+jiIn
+keyCode = sigunguCdIn+bjdongCdIn+bunIn+jiIn+"|"+area+"|"+flr
 print(keyCode)
 year=2006
 mon=4
-
-c.execute("SELECT * FROM trx WHERE keyCode LIKE '"+keyCode+"'")
+conn = sqlite3.connect('aptTrx.db')
+c = conn.cursor()
+c.execute("SELECT * FROM trxData WHERE keyCode LIKE '"+keyCode+"'")
 trxData = c.fetchall()
 print(trxData)
 for trxResult in trxData:
