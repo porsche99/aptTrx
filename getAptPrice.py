@@ -100,7 +100,6 @@ def getDetailBuildingInfo(sigunguCd, bjdongCd, bun, ji, dongNmP, hoNmP):
         #print(parsed[8])
         #mainPurpsCdNm = item.mainPurpsCdNm.string
         exposPubuseGbCd = item.exposPubuseGbCd.string
-        print(exposPubuseGbCd)
         #if '아파트' in mainPurpsCdNm:
         if '1' in exposPubuseGbCd:
             #print(re.sub('츨','',item.flrNoNm.string))		
@@ -122,7 +121,7 @@ dongNmPIn ='31동'
 hoNmPIn = '1701호'
 
 detailBuildingInfo = getDetailBuildingInfo(sigunguCdIn, bjdongCdIn, bunIn, jiIn, dongNmPIn, hoNmPIn)
-print(detailBuildingInfo)
+#print(detailBuildingInfo)
 #print(detailBuildingInfo[0])
 #print(detailBuildingInfo[1])
 
@@ -148,7 +147,7 @@ conn = sqlite3.connect('aptTrx.db')
 c = conn.cursor()
 c.execute("SELECT * FROM trxData WHERE keyCode LIKE '"+keyCode+"'")
 trxData = c.fetchall()
-print(trxData)
+#print(trxData)
 for trxResult in trxData:
     print("RESULT : ",trxResult)
 conn.commit()
