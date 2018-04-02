@@ -44,52 +44,9 @@ todayM = date.today().strftime('%Y%m')
 
 conn = sqlite3.connect('aptTrx.db')
 c = conn.cursor()
-c.execute('CREATE TABLE IF NOT EXISTS trx(pCode text PRIMARY KEY, keyCode text, price text, conYear text, trxYear text, code1 text, code2 text, code3 text, code4 text, code5 text, code6 text, dong text, bcode1 text, bcode2 text, bcode3 text, bcode4 text, bcode5 text, apt text, trxMonth text, trxDay text, serialNo text, size text, gNo text, gCode text, floor text)')
+c.execute('CREATE TABLE IF NOT EXISTS trx(pCode text PRIMARY KEY, keyCode text, price text, trxYear text, trxMonth text, size text, floor text, allInfo text)')
 conn.commit()
 
-
-'''
-dynamodb = boto3.resource('dynamodb')
-
-table_name = 'aptTrx3'
-
-dynamodb_client = boto3.client('dynamodb')
-
-existing_tables  = dynamodb_client.list_tables()['TableNames']
-
-if table_name not in existing_tables:
-    table = dynamodb.create_table(
-        TableName='aptTrx3',
-        KeySchema=[
-            {
-                'AttributeName': 'trxYear',
-                'KeyType': 'HASH'  #Partition key
-            },
-            {
-                'AttributeName': 'keyCodeB',
-                'KeyType': 'RANGE'  #Sort key
-            }
-        ],
-        AttributeDefinitions=[
-            {
-                'AttributeName': 'trxYear',
-                'AttributeType': 'N'
-            },
-            {
-                'AttributeName': 'keyCodeB',
-                'AttributeType': 'S'
-            },
-
-        ],
-        ProvisionedThroughput={
-            'ReadCapacityUnits': 30,
-            'WriteCapacityUnits': 30
-        }
-    )
-    print('creating table~ wait a moment')
-    table.meta.client.get_waiter('table_exists').wait(TableName='aptTrx3')
-    print('create table complete!')
-'''
 #지정된 지역코드 및 월의 아파트 거래 데이터를 받아와서 db에 insert
 def howmuch(loc_param, date_param):
 	numb = 0
@@ -111,7 +68,7 @@ def howmuch(loc_param, date_param):
 	#table = dynamodb.Table('aptTrx3')
 
 	# WHEREunion_bldg_mngm_noLIKE'1111041001350300000400000'
-	# 도로명시군구코드+도로명코드+도로명일련번호코드+도로명지상지하코드+도로명건물본번호+부번호 => keyCodeB
+	# 도로명시군구코드+도로명코드+도로명일련번호코드+도로명지상지하코드+도로명건물본번호+부번호 => keyCode
 	#parsed[7] + parsed[10] + parsed[8] + parsed[9] + parsed[5] + parsed[6]
 	#pCode = loc_param + date_param + str(numb)
 	numb=0
@@ -120,11 +77,11 @@ def howmuch(loc_param, date_param):
 		rep = apttrxs['response']
 		bd = rep['body']['items']
 		#print(bd['item'])
-		keyCodeB = ''
+		keyCode = ''
 		for item in bd['item']:
 			#item = str(item)
-			keyCodeB = item['법정동시군구코드'] + item['법정동읍면동코드'] + item['법정동본번코드'] + item['법정동부번코드'] + '|' + item['전용면적'] + '|' + item['층']
-				
+			pCode = loc_param + date_param + str(numb)
+			keyCode = item['법정동시군구코드'] + item['법정동읍면동코드'] + item['법정동본번코드'] + item['법정동부번코드'] + '|' + item['전용면적'] + '|' + item['층']
 			trxYear = int(item['년'])
 			trxMon = int(item['월'])
 			trxPrice = item['거래금액']
@@ -133,23 +90,12 @@ def howmuch(loc_param, date_param):
 			flr = item['층']
 
 			info = item
-			print(trxYear,keyCodeB,trxPriceN)
-'''
-			table.put_item(
-				Item={
-					'trxYear': trxYear,
-					'trxMon': trxMon,
-					'keyCodeB': keyCodeB,
-					'trxPrice': trxPriceN,
-					'area': area,
-					'flr': flr,
-					'info': info,
-				}
-			)
+			print(trxYear,keyCode,trxPriceN)
 
-'''
 #여기서부터 고치시용
-			c.execute('INSERT or IGNORE INTO trx VALUES ("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % (pCode, keyCode ,parsed[1].strip(), parsed[2], parsed[3], parsed[4], parsed[5], parsed[6], parsed[7], parsed[8], parsed[9], parsed[10], parsed[11], parsed[12], parsed[13], parsed[14], parsed[15], parsed[16], parsed[17], parsed[18], parsed[19], parsed[20], parsed[21], parsed[22], parsed[23]))
+
+#pCode text PRIMARY KEY, keyCode text, price text, trxYear text, trxMonth text, size text, floor text, allInfo text
+			c.execute('INSERT or IGNORE INTO trx VALUES ("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % (pCode, keyCode ,trxPriceN, trxYear, trxMon, area, flr, item))
 			numb += 1
 
 		conn.commit()
