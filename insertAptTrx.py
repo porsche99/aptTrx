@@ -31,7 +31,7 @@ url+= 'ServiceKey='+key + '&numOfRows='+ numOfRows
 # 출력 파일 명
 OUTPUT_FILE_NAME = 'output.json'
 
-conn = sqlite3.connect('loc.db')
+conn = sqlite3.connect('../loc.db')
 c = conn.cursor()
 c.execute('SELECT * FROM location')
 locData = c.fetchall()
