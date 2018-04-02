@@ -1,7 +1,7 @@
 import re
 import sqlite3
 
-conn = sqlite3.connect('loc.db')
+conn = sqlite3.connect('../loc.db')
 c = conn.cursor()
 c.execute('CREATE TABLE IF NOT EXISTS location(loc text PRIMARY KEY, code text)')
 conn.commit()

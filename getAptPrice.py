@@ -143,7 +143,7 @@ keyCode = sigunguCdIn+bjdongCdIn+bunIn+jiIn+"|"+area+"|"+flr
 print(keyCode)
 year=2006
 mon=4
-conn = sqlite3.connect('aptTrx.db')
+conn = sqlite3.connect('../aptTrx.db')
 c = conn.cursor()
 c.execute("SELECT * FROM trxData WHERE keyCode LIKE '"+keyCode+"'")
 trxData = c.fetchall()

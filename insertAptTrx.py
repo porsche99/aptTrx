@@ -42,7 +42,7 @@ conn.commit()
 
 todayM = date.today().strftime('%Y%m')
 
-conn = sqlite3.connect('aptTrx.db')
+conn = sqlite3.connect('../aptTrx.db')
 c = conn.cursor()
 c.execute('CREATE TABLE IF NOT EXISTS trxData(pCode text PRIMARY KEY, keyCode text, price text, trxYear text, trxMonth text, size text, floor text, allInfo text)')
 conn.commit()
