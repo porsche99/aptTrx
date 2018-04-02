@@ -81,7 +81,7 @@ def howmuch(loc_param, date_param):
 		for item in bd['item']:
 			#item = str(item)
 			pCode = loc_param + date_param + str(numb)
-			keyCode = item['법정동시군구코드'] + item['법정동읍면동코드'] + item['법정동본번코드'] + item['법정동부번코드'] + '|' + item['전용면적'] + '|' + item['층']
+			keyCode = item['법정동시군구코드'] + item['법정동읍면동코드'] + item['법정동본번코드'] + str(item.get('법정동부번코드')) + '|' + item['전용면적'] + '|' + item['층']
 			trxYear = int(item['년'])
 			trxMon = int(item['월'])
 			trxPrice = item['거래금액']
@@ -104,11 +104,9 @@ def howmuch(loc_param, date_param):
 
 cnt = 0
 for loc in locData:
-
     loc_param = loc[1]
-
     end = False
-    startY = 2006
+    startY = 2017
     startM = 1
     endY = 2018
     endM = 3
