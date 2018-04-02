@@ -44,7 +44,7 @@ todayM = date.today().strftime('%Y%m')
 
 conn = sqlite3.connect('aptTrx.db')
 c = conn.cursor()
-c.execute('CREATE TABLE IF NOT EXISTS trx(pCode text PRIMARY KEY, keyCode text, price text, trxYear text, trxMonth text, size text, floor text, allInfo text)')
+c.execute('CREATE TABLE IF NOT EXISTS trxData(pCode text PRIMARY KEY, keyCode text, price text, trxYear text, trxMonth text, size text, floor text, allInfo text)')
 conn.commit()
 
 #지정된 지역코드 및 월의 아파트 거래 데이터를 받아와서 db에 insert
@@ -95,7 +95,7 @@ def howmuch(loc_param, date_param):
 #여기서부터 고치시용
 
 #pCode text PRIMARY KEY, keyCode text, price text, trxYear text, trxMonth text, size text, floor text, allInfo text
-			c.execute('INSERT or IGNORE INTO trx VALUES ("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % (pCode, keyCode ,trxPriceN, trxYear, trxMon, area, flr, item))
+			c.execute('INSERT or IGNORE INTO trxData VALUES ("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % (pCode, keyCode ,trxPriceN, trxYear, trxMon, area, flr, item))
 			numb += 1
 
 		conn.commit()
