@@ -110,6 +110,7 @@ def getDetailBuildingInfo(sigunguCd, bjdongCd, bun, ji, dongNmP, hoNmP):
 
 #주소를 입력
 inputKeyword = input("아파트이름을 입력하세요 : ")
+print(inputKeyword)
 detailAddr = getDetailAddr(inputKeyword)
 print(detailAddr)
 
@@ -121,7 +122,7 @@ jiIn = detailAddr[3].zfill(4)  # 법정동부번코드(4자리로 '0' padding �
 dongNmPIn ='31동'
 dongNmPIn = input("동 을 입력하세요 : ")
 hoNmPIn = '1701호'
-hoNmPIn = input("호 를 입력하세요 : " 
+hoNmPIn = input("호 를 입력하세요 : ")
 
 detailBuildingInfo = getDetailBuildingInfo(sigunguCdIn, bjdongCdIn, bunIn, jiIn, dongNmPIn, hoNmPIn)
 #print(detailBuildingInfo)

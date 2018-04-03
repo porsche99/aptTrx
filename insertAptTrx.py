@@ -88,9 +88,11 @@ def howmuch(loc_param, date_param):
 			trxPriceN = int(re.sub(',','',trxPrice))
 			area = item['전용면적']
 			flr = item['층']
-
+			item['아파트']=item['아파트'].replace("'"," ")
+			
 			info = item
 			print(trxYear,keyCode,trxPriceN)
+			#print(item['아파트'])
 
 #여기서부터 고치시용
 
